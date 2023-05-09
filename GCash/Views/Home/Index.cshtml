@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<script src="~/js/custom_datatable.js"></script>
+
+<div class="text-center mb-5">
+    <h1 class="display-4">Welcome to GCash record</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<!-- table here -->
+<div id="table-container"></div>
+
+<script>
+    $(document).ready(function () {
+        loadGrid('table-container'
+            , '/Home/GetData'
+            , '/Home/ReadData'
+            , '/Home/DeleteData'
+            , '/Home/UpdateData'
+            , 5,
+            {
+                TableId: 'tbl_gcash',
+                Columns: [
+                    { FieldName: 'Id', DataType: 'int', IsKey: true, HideFromTable: true },
+                    { FieldName: 'ReferenceNumber', DataType: 'string', CustomColumnName: 'Reference No.', HasOption: true },
+                    { FieldName: 'Amount', DataType: 'int', CustomColumnName: 'Amount (₱)' },
+                    { FieldName: 'StatusText', DataType: 'string', CustomColumnName: 'Status', HideFromPopup: true },
+                    { FieldName: 'CreatedDateText', DataType: 'string', CustomColumnName: 'Cash-in Date', HideFromPopup: true }
+                ]
+            });
+    });
+</script>

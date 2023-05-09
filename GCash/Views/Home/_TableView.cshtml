@@ -1,0 +1,204 @@
+﻿@model GCash.Models.ViewModels.TableModel
+
+<style>
+    .hide-from-popup {
+        display: none;
+    }
+</style>
+
+<!-- search -->
+<div class="row mb-2">
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="text" placeholder="Search by keyword" class="form-control" aria-label="Search" aria-describedby="basic-addon" autofocus id="txtSearch_@Model.TableId" />
+            <button type="button" class="btn btn-outline-primary" id="btnSearch_@Model.TableId">Search</button>
+        </div>
+    </div>
+
+    <div class="col-md">
+        <button class="btn btn-primary" style="float: right" id="btnAdd_@Model.TableId">Add</button>
+    </div>
+</div>
+
+<!-- grid -->
+<table class="table table-striped table-bordered mb-2" style="width: 100%" id="@Model.TableId">
+    <thead>
+        <tr>
+            @if (Model.Columns != null || Model.Columns.Any())
+            {
+                foreach (var column in Model.Columns)
+                {
+                    <th>@column.ColumnName</th>
+                }
+            }
+        </tr>
+    </thead>
+</table>
+
+<!-- paging buttons -->
+@if (Model.PageSize > 0)
+{
+    <div style="text-align: right; width: 100%">
+        <nav aria-label="Page Navigation">
+            <ul class="pagination justify-content-end">
+                <li class="page-item"><a class="page-link" href="#" id="btnPrev_@Model.TableId">Previous</a></li>
+                <li class="page-item"><a class="page-link" href="#" id="btnNext_@Model.TableId">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <input type="hidden" value="1" id="pageNumber_@Model.TableId" />
+    <input type="hidden" value="@Model.PageSize" id="pageSize_@Model.TableId" />
+}
+
+<!-- popup -->
+<div class="modal fade" tabindex="1" id="modal_@Model.TableId">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">GCash Reference Number</h5>
+                @*<button type="button" class="close modal-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>*@
+            </div>
+
+            <div class="modal-body">
+                <form id="form_@Model.TableId">
+                    <div class="container">
+                        @if (Model.Columns != null || Model.Columns.Any())
+                        {
+                            foreach (var column in Model.Columns)
+                            {
+                                <div class="row mb-1">
+                                    <div class="col-md-4 form-control" style="border: 0">
+                                        <span class="@(column.HideFromPopup ? "hide-from-popup" : "")">@column.FieldName</span>
+
+                                        <div class="col-md">
+                                            @switch (column.DataType)
+                                            {
+                                                case "string":
+                                                    <input type="text"
+                                                           class="form-control @(column.HideFromPopup ? "hide-from-popup" : "")"
+                                                           name="@column.FieldName"
+                                                           id="input_@column.FieldName.ToLower()" 
+                                                           @(column.IsKey ? "readonly" : "")/>
+                                                    break;
+
+                                                case "int":
+                                                    <input type="number"
+                                                           class="form-control @(column.HideFromPopup ? "hide-from-popup" : "")"
+                                                           style="width: 50%" 
+                                                           name="@column.FieldName" 
+                                                           id="input_@column.FieldName.ToLower()" 
+                                                           @(column.IsKey ? "readonly" : "")/>
+                                                    break;
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" style="width: 80px" id="btnSave_@Model.TableId">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" style="width: 80px" id="btnClose_@Model.TableId">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        loadTable('@Model.TableId');
+    });
+
+    function loadTable(tableId) {
+        let column_fields = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Columns));
+        let primary_key = getkey(column_fields);
+
+        $('#' + tableId).DataTable({
+            paging: false,
+            ordering: false,
+            serverSide: true,
+            info: false,
+            bFilter: false,
+            responsive: true,
+
+            ajax: {
+                url: '@Model.GetUrl',
+                type: 'POST',
+                dataType: 'json',
+                data: function (d) {
+                    d.PageSize = $('#pageSize_' + tableId).val();
+                    d.PageNumber = $('#pageNumber_' + tableId).val();
+                    d.Keyword = $('#txtSearch_' + tableId).val();
+                },
+                dataSrc: function (data) {
+                    navbuttonLogics(data, tableId);
+                    return data.Collection;
+                }
+            },
+            order: [[1, 'desc']],
+            columns: buildColumns(column_fields),
+            columnDefs: buildColumnDefs(column_fields, primary_key, '@Model.TableId', '@Model.ReadUrl', '@Model.DeleteUrl')
+        });
+
+        /* search */
+        $(document).on('click', '#btnSearch_' + tableId, function () {
+            $('#pageNumber_' + tableId).val(1);
+            $('#' + tableId).DataTable().ajax.reload();
+        });
+
+        /* add */
+        $(document).on('click', '#btnAdd_' + tableId, function () {
+            clearAllFields(column_fields);            
+            $('#modal_' + tableId).modal('show');
+        });
+
+        /* next */
+        $(document).on('click', '#btnNext_' + tableId, function () {
+            $('#pageNumber_' + tableId).val(parseInt($('#pageNumber_' + tableId).val()) + 1);
+            $('#' + tableId).DataTable().ajax.reload();
+        });
+
+        /* previous */
+        $(document).on('click', '#btnPrev_' + tableId, function () {
+            let page_number = parseInt($('#pageNumber_' + tableId).val());
+
+            if (page_number > 1) {
+                $('#pageNumber_' + tableId).val(parseInt($('#pageNumber_' + tableId).val()) - 1);
+                $('#' + tableId).DataTable().ajax.reload();
+            }
+        });
+
+        /* save */
+        $(document).on('click', '#btnSave_' + tableId, function () {
+            onSaveRow('form_@Model.TableId', function (response) {
+
+                if (response.isSuccess) {
+                    $('#' + tableId).DataTable().ajax.reload();
+                    $('#modal_@Model.TableId').modal('hide');
+                }
+            }, '@Model.UpdateUrl');
+        });
+
+        /* close */
+        $(document).on('click', '#btnClose_' + tableId, function () {
+            clearAllFields(column_fields);            
+            $('#modal_' + tableId).modal('hide');
+        });
+
+        /* search (enter key) */
+        $(document).on('keyup', '#txtSearch_' + tableId, function (e) {
+            var key = e.keyCode || e.which;
+
+            if (key == 13) {
+                $('#pageNumber_' + tableId).val(1);
+                $('#' + tableId).DataTable().ajax.reload();
+            }
+        });
+    }
+</script>
