@@ -1,4 +1,4 @@
-﻿@model GCash.Models.ViewModels.TableModel
+﻿@model GCash.Models.TableModels.TableModel
 
 <style>
     .hide-from-popup {
@@ -56,7 +56,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">GCash Reference Number</h5>
+                <h5 class="modal-title">GCash Reference No.</h5>
                 @*<button type="button" class="close modal-close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>*@
@@ -69,29 +69,35 @@
                         {
                             foreach (var column in Model.Columns)
                             {
-                                <div class="row mb-1">
-                                    <div class="col-md-4 form-control" style="border: 0">
-                                        <span class="@(column.HideFromPopup ? "hide-from-popup" : "")">@column.FieldName</span>
-
-                                        <div class="col-md">
-                                            @switch (column.DataType)
+                                <div class="row mb-2">
+                                    <div class="col-md">
+                                        <div class="form-group">
+                                            
+                                            @if (!column.HideFromPopup)
                                             {
-                                                case "string":
-                                                    <input type="text"
-                                                           class="form-control @(column.HideFromPopup ? "hide-from-popup" : "")"
-                                                           name="@column.FieldName"
-                                                           id="input_@column.FieldName.ToLower()" 
-                                                           @(column.IsKey ? "readonly" : "")/>
-                                                    break;
+                                                <span class="form-control @(column.HideFromPopup ? "hide-from-popup" : "")" style="border: 0; padding-left: 0; font-weight: 600">
+                                                    @(!string.IsNullOrEmpty(column.CustomColumnName) ? column.CustomColumnName : column.FieldName)
+                                                </span>
 
-                                                case "int":
-                                                    <input type="number"
-                                                           class="form-control @(column.HideFromPopup ? "hide-from-popup" : "")"
-                                                           style="width: 50%" 
-                                                           name="@column.FieldName" 
-                                                           id="input_@column.FieldName.ToLower()" 
-                                                           @(column.IsKey ? "readonly" : "")/>
-                                                    break;
+                                                @switch (column.DataType)
+                                                {
+                                                    case "string":
+                                                        <input type="text"
+                                                               class="form-control @(column.HideFromPopup ? "hide-from-popup" : "")"
+                                                               name="@column.FieldName"
+                                                               id="input_@column.FieldName.ToLower()"
+                                                        @(column.IsKey ? "readonly" : "") />
+                                                        break;
+
+                                                    case "int":
+                                                        <input type="number"
+                                                               class="form-control @(column.HideFromPopup ? "hide-from-popup" : "")"
+                                                               style="width: 50%"
+                                                               name="@column.FieldName"
+                                                               id="input_@column.FieldName.ToLower()"
+                                                        @(column.IsKey ? "readonly" : "") />
+                                                        break;
+                                                }
                                             }
                                         </div>
                                     </div>

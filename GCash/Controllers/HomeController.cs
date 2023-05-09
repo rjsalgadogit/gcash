@@ -1,4 +1,5 @@
 ﻿using GCash.Models;
+using GCash.Models.TableModels;
 using GCash.Models.ViewModels;
 using GCash.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;

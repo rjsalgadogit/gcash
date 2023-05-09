@@ -1,12 +1,10 @@
-﻿namespace GCash.Models.ViewModels
+﻿namespace GCash.Models.TableModels
 {
-    public class ColumnModel
+    public class FieldModel
     {
         public string FieldName { get; set; }
 
-        public string DataType { get; set; }
-
-        public string ColumnName { get { return !string.IsNullOrEmpty(CustomColumnName) ? CustomColumnName : FieldName; } }
+        public string DataType { get; set; }        
 
         public string CustomRowName { get; set; }
 
@@ -19,5 +17,7 @@
         public bool HasOption { get; set; }
 
         public bool HideFromPopup { get; set; }
+
+        public string ColumnName { get { return !string.IsNullOrEmpty(CustomColumnName) ? CustomColumnName : FieldName; } }
     }
 }

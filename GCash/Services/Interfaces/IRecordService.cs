@@ -1,4 +1,5 @@
 ﻿using GCash.Models.StoredProcedure;
+using GCash.Models.TableModels;
 using GCash.Models.ViewModels;
 
 namespace GCash.Services.Interfaces

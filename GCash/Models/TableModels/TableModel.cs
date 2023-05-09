@@ -1,4 +1,6 @@
-﻿namespace GCash.Models.ViewModels
+﻿using GCash.Models.ViewModels;
+
+namespace GCash.Models.TableModels
 {
     public class TableModel
     {
@@ -18,6 +20,6 @@
 
         public string Keyword { get; set; }
 
-        public List<ColumnModel> Columns { get; set; }
+        public List<FieldModel> Columns { get; set; }
     }
 }

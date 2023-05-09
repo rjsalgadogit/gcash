@@ -1,0 +1,17 @@
+﻿@model GCash.Models.FormFieldModel
+
+<div class="form-group">
+    @if (!string.IsNullOrEmpty(Model.Label))
+    {
+        <label>@Model.Label</label>
+    }
+
+    @if (Model.IsReadOnly)
+    {
+        @Html.DropDownList(Model.Name, (SelectList)TempData[Model.TempDataName], htmlAttributes: new { @class = "selects show-tick form-control", @readonly = "readonly" })
+    }
+    else
+    {
+        @Html.DropDownList(Model.Name, (SelectList)TempData[Model.TempDataName], htmlAttributes: new { @class = "selects show-tick form-control" })
+    }
+</div>

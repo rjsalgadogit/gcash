@@ -1,5 +1,6 @@
 ﻿using GCash.Models.Extensions;
 using GCash.Models.StoredProcedure;
+using GCash.Models.TableModels;
 using GCash.Models.ViewModels;
 using GCash.Services.Interfaces;
 using Sequel.Service.Interfaces;
