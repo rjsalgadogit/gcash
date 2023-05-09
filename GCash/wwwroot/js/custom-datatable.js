@@ -187,9 +187,14 @@ function onViewRow(keyId, primaryKey, readUrl, tableId) {
     let parameter = '?' + primaryKey + '=' + keyId;
 
     GotoControllerAsync(readUrl + parameter, 'POST', null, false, 'json', function (response) {
+        console.log(response);
 
         Object.keys(response).forEach(function eachKey(key) {
-            $('#input_' + key.toLowerCase()).val(response[key]);
+            let keyValue = key.toLowerCase().indexOf('date') > -1
+                ? response[key].substring(0, response[key].indexOf('T'))   //remove time in date
+                : response[key];
+
+            $('#input_' + key.toLowerCase()).val(keyValue);
         });
 
         $('#modal_' + tableId).modal('show');
@@ -200,12 +205,16 @@ function onEditRow(keyId, primaryKey, readUrl, tableId) {
     let parameter = '?' + primaryKey + '=' + keyId;
     
     GotoControllerAsync(readUrl + parameter, 'POST', null, false, 'json', function (response) {
+        console.log(response);
 
         Object.keys(response).forEach(function eachKey(key) {
-            $('#input_' + key.toLowerCase()).val(response[key]);
+            let keyValue = key.toLowerCase().indexOf('date') > -1
+                ? response[key].substring(0, response[key].indexOf('T'))   //remove time in date
+                : response[key];
+
+            $('#input_' + key.toLowerCase()).val(keyValue);
         });
 
-        $('#' + tableId).DataTable().ajax.reload();
         $('#modal_' + tableId).modal('show');
     });
 }

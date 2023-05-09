@@ -1,8 +1,10 @@
 ﻿@model GCash.Models.TableModels.TableModel
 
+
+
 <style>
-    .hide-from-popup {
-        display: none;
+    .datepicker {
+        padding: .375rem .75rem;
     }
 </style>
 
@@ -69,13 +71,13 @@
                         {
                             foreach (var column in Model.Columns)
                             {
-                                <div class="row mb-2">
-                                    <div class="col-md">
-                                        <div class="form-group">
-                                            
-                                            @if (!column.HideFromPopup)
-                                            {
-                                                <span class="form-control @(column.HideFromPopup ? "hide-from-popup" : "")" style="border: 0; padding-left: 0; font-weight: 600">
+                                @if (!column.HideFromPopup)
+                                {
+                                    <div class="row mb-2">
+                                        <div class="col-md">
+                                            <div class="form-group">
+
+                                                <span class="form-control" style="border: 0; padding-left: 0; font-weight: 600">
                                                     @(!string.IsNullOrEmpty(column.CustomColumnName) ? column.CustomColumnName : column.FieldName)
                                                 </span>
 
@@ -83,7 +85,7 @@
                                                 {
                                                     case "string":
                                                         <input type="text"
-                                                               class="form-control @(column.HideFromPopup ? "hide-from-popup" : "")"
+                                                               class="form-control"
                                                                name="@column.FieldName"
                                                                id="input_@column.FieldName.ToLower()"
                                                         @(column.IsKey ? "readonly" : "") />
@@ -91,17 +93,31 @@
 
                                                     case "int":
                                                         <input type="number"
-                                                               class="form-control @(column.HideFromPopup ? "hide-from-popup" : "")"
+                                                               class="form-control"
                                                                style="width: 50%"
                                                                name="@column.FieldName"
-                                                               id="input_@column.FieldName.ToLower()"
+                                                               id="input_@column.FieldName.ToLower()"                                                               
                                                         @(column.IsKey ? "readonly" : "") />
                                                         break;
+
+                                                    case "datetime":
+                                                        <div class="input-group" style="width: 250px">
+                                                            <input type="text"
+                                                                   class="form-control datepicker"
+                                                                   name="@column.FieldName"
+                                                                   id="input_@column.FieldName.ToLower()"
+                                                            @(column.IsKey ? "readonly" : "") />
+
+                                                            <span class="input-group-text">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </span>
+                                                        </div>
+                                                        break;
                                                 }
-                                            }
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                }
                             }
                         }
                     </div>
@@ -119,6 +135,12 @@
 <script>
     $(document).ready(function () {
         loadTable('@Model.TableId');
+        $('.datepicker').datepicker({
+            todayHighlight: true,
+            format: 'yyyy-mm-dd',
+            clearBtn: false,
+            autoclose: true
+        });
     });
 
     function loadTable(tableId) {

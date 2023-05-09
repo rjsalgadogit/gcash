@@ -21,7 +21,8 @@ namespace GCash.Models.Extensions
                 Id = spModel.Id,
                 ReferenceNumber = spModel.ReferenceNumber,
                 Amount = spModel.Amount,
-                IsClaimed = spModel.IsClaimed
+                IsClaimed = spModel.IsClaimed,
+                CreatedDate = spModel.CreatedDate
             };
     }
 }

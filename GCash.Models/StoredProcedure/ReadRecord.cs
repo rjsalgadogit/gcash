@@ -18,5 +18,8 @@ namespace GCash.Models.StoredProcedure
 
         [Read]
         public bool IsClaimed { get; set; }
+
+        [Read]
+        public DateTime? CreatedDate { get; set; }
     }
 }

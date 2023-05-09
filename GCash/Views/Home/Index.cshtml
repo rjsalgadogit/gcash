@@ -1,10 +1,16 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-<script src="~/js/custom_datatable.js"></script>
+
+<!-- This are REQUIRED for datatables !!! -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" integrity="sha512-TQQ3J4WkE/rwojNFo6OJdyu6G8Xe9z8rMrlF9y7xpFbQfW5g8aSWcygCQ4vqRiJqFsDsE1T6MoAOMJkFXlrI9A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <div class="text-center mb-5">
-    <h1 class="display-4">Welcome to GCash record</h1>
+    <h1 class="display-4">Welcome
+
+    </h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
@@ -26,7 +32,8 @@
                     { FieldName: 'ReferenceNumber', DataType: 'string', CustomColumnName: 'Reference No.', HasOption: true },
                     { FieldName: 'Amount', DataType: 'int', CustomColumnName: 'Amount (₱)' },
                     { FieldName: 'StatusText', DataType: 'string', CustomColumnName: 'Status', HideFromPopup: true },
-                    { FieldName: 'CreatedDateText', DataType: 'string', CustomColumnName: 'Cash-in Date', HideFromPopup: true }
+                    { FieldName: 'CreatedDateText', DataType: 'string', CustomColumnName: 'Cash-in Date', HideFromPopup: true },
+                    { FieldName: 'CreatedDate', DataType: 'datetime', CustomColumnName: 'Created Date', HideFromTable: true }
                 ]
             });
     });

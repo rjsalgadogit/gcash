@@ -10,10 +10,10 @@
 
         public bool IsClaimed { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
         public string StatusText { get { return IsClaimed ? "Claimed" : "Unclaimed"; } }
 
-        public string CreatedDateText { get { return CreatedDate.ToString("MM/dd/yyyy"); } }
+        public string CreatedDateText { get { return CreatedDate.HasValue ? CreatedDate.Value.ToString("MM/dd/yyyy") : string.Empty; } }
     }
 }
