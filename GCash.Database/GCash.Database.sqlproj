@@ -68,7 +68,5 @@
     <Build Include="dbo\Stored Procedures\ReadRecord.sql" />
     <Build Include="dbo\Stored Procedures\GetRecord.sql" />
     <Build Include="dbo\Stored Procedures\DeleteRecord.sql" />
-    <Build Include="Security\txn.sql" />
-    <Build Include="Security\ref.sql" />
   </ItemGroup>
 </Project>
